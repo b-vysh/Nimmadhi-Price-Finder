@@ -1,9 +1,20 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import PriceFinder from './components/PriceFinder';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
+  useEffect(() => {
+    // Keep dark mode as default
+    if (localStorage.theme === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    }
+  }, []);
+
   return (
     <Router>
       <Routes>
@@ -14,7 +25,7 @@ function App() {
           <Route path="/" element={<PriceFinder />} />
         </Route>
 
-        {/* Catch all redirect to root (which is protected and will redirect to login if not auth'd) */}
+        {/* Catch all redirect to root */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
