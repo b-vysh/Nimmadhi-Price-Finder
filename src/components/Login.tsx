@@ -22,8 +22,8 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-96">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded shadow-md w-96 mb-8">
         <h2 className="text-2xl font-bold mb-6 text-center text-blue-900">Nimmadhi Price Finder</h2>
         {error && <div className="bg-red-100 text-red-700 p-2 rounded mb-4 text-sm">{error}</div>}
         <form onSubmit={handleLogin}>
@@ -63,6 +63,10 @@ const Login = () => {
           </div>
         </form>
       </div>
+      
+      <footer className="text-center text-gray-500 text-sm font-medium">
+        Made with ❤️ by VYSH 👑
+      </footer>
     </div>
   );
 };

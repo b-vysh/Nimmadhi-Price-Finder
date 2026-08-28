@@ -126,19 +126,19 @@ const PriceFinder = () => {
 
         {/* Results Display */}
         {currentSize && (
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg shadow-sm p-4 sm:p-6">
             <h3 className="text-xl font-bold text-gray-800 mb-4">Prices by Thickness</h3>
-            <div className="overflow-x-auto">
+            <div className="overflow-x-hidden">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thickness (Inches)</th>
+                    <th className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thickness</th>
                     {discount === 0 ? (
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price (₹)</th>
+                      <th className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price (₹)</th>
                     ) : (
                       <>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Original Price (₹)</th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Discounted Price (₹)</th>
+                        <th className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Original (₹)</th>
+                        <th className="px-2 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Final (₹)</th>
                       </>
                     )}
                   </tr>
@@ -148,17 +148,17 @@ const PriceFinder = () => {
                     const finalPrice = tp.price * (1 - discount / 100);
                     return (
                       <tr key={idx}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{tp.thicknessInches}"</td>
+                        <td className="px-2 sm:px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900">{tp.thicknessInches}"</td>
                         {discount === 0 ? (
-                          <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                          <td className="px-2 sm:px-6 py-3 whitespace-nowrap text-sm font-bold text-gray-900">
                             ₹{tp.price.toLocaleString('en-IN')}
                           </td>
                         ) : (
                           <>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 line-through">
+                            <td className="px-2 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-500 line-through">
                               ₹{tp.price.toLocaleString('en-IN')}
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-600">
+                            <td className="px-2 sm:px-6 py-3 whitespace-nowrap text-sm font-bold text-green-600">
                               ₹{finalPrice.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                             </td>
                           </>
@@ -172,6 +172,10 @@ const PriceFinder = () => {
           </div>
         )}
       </main>
+
+      <footer className="text-center py-8 text-gray-500 text-sm font-medium">
+        Made with ❤️ by VYSH 👑
+      </footer>
     </div>
   );
 };
