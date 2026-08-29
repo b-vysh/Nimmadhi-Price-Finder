@@ -12,10 +12,13 @@ const Login = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const envUsername = import.meta.env.VITE_APP_USERNAME;
-    const envPassword = import.meta.env.VITE_APP_PASSWORD;
+    const envUsername = import.meta.env.VITE_APP_USERNAME || '';
+    const envPassword = import.meta.env.VITE_APP_PASSWORD || '';
 
-    if (username === envUsername && password === envPassword) {
+    if (
+      username.trim().toLowerCase() === envUsername.trim().toLowerCase() && 
+      password.trim() === envPassword.trim()
+    ) {
       sessionStorage.setItem('isAuthenticated', 'true');
       navigate('/');
     } else {
