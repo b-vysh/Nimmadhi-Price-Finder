@@ -89,6 +89,8 @@ const PriceFinder = () => {
                 onChange={(e) => {
                   setSelectedModel(e.target.value);
                   setSelectedSize(''); // Reset size when model changes
+                  setDiscount(0);      // Reset base discount
+                  setExtraDiscount(0); // Reset extra discount
                 }}
               >
                 <option value="">-- Select a Model --</option>
@@ -139,12 +141,13 @@ const PriceFinder = () => {
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Apply Discount</label>
               <div className="flex gap-2">
                 <select
-                  className="flex-1 bg-white dark:bg-[#111330] border-gray-300 dark:border-white/10 text-gray-900 dark:text-white rounded-md shadow-sm p-2 border focus:ring-2 focus:ring-[#78ba44] focus:border-transparent outline-none transition-colors"
+                  className="flex-1 bg-white dark:bg-[#111330] border-gray-300 dark:border-white/10 text-gray-900 dark:text-white rounded-md shadow-sm p-2 border focus:ring-2 focus:ring-[#78ba44] focus:border-transparent outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   value={discount}
                   onChange={(e) => {
                     setDiscount(Number(e.target.value));
                     setExtraDiscount(0);
                   }}
+                  disabled={!selectedModel}
                 >
                   {DISCOUNTS.map((d) => (
                     <option key={d} value={d}>
@@ -154,16 +157,18 @@ const PriceFinder = () => {
                 </select>
                 <button
                   onClick={() => setExtraDiscount((prev) => prev + 5)}
-                  className="bg-[#78ba44] hover:bg-[#65a037] text-white px-3 py-2 rounded-md font-bold transition-colors whitespace-nowrap shadow-sm"
+                  className="bg-[#78ba44] hover:bg-[#65a037] text-white px-3 py-2 rounded-md font-bold transition-colors whitespace-nowrap shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Add additional 5% discount"
+                  disabled={!selectedModel}
                 >
                   + 5%
                 </button>
                 {extraDiscount > 0 && (
                   <button
                     onClick={() => setExtraDiscount(0)}
-                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md font-bold transition-colors shadow-sm"
+                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md font-bold transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Reset extra discount"
+                    disabled={!selectedModel}
                   >
                     Reset
                   </button>
