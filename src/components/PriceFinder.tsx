@@ -12,6 +12,7 @@ const PriceFinder = () => {
   const [selectedSize, setSelectedSize] = useState('');
   const [unit, setUnit] = useState<UnitType>('feet');
   const [discount, setDiscount] = useState<number>(0);
+  const [extraDiscount, setExtraDiscount] = useState<number>(0);
   const [isDark, setIsDark] = useState(
     () => localStorage.getItem('theme') !== 'light'
   );
@@ -136,17 +137,38 @@ const PriceFinder = () => {
             {/* Discount Selection */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Apply Discount</label>
-              <select
-                className="w-full bg-white dark:bg-[#111330] border-gray-300 dark:border-white/10 text-gray-900 dark:text-white rounded-md shadow-sm p-2 border focus:ring-2 focus:ring-[#78ba44] focus:border-transparent outline-none transition-colors"
-                value={discount}
-                onChange={(e) => setDiscount(Number(e.target.value))}
-              >
-                {DISCOUNTS.map((d) => (
-                  <option key={d} value={d}>
-                    {d === 0 ? 'No Discount' : `${d}% Off`}
-                  </option>
-                ))}
-              </select>
+              <div className="flex gap-2">
+                <select
+                  className="flex-1 bg-white dark:bg-[#111330] border-gray-300 dark:border-white/10 text-gray-900 dark:text-white rounded-md shadow-sm p-2 border focus:ring-2 focus:ring-[#78ba44] focus:border-transparent outline-none transition-colors"
+                  value={discount}
+                  onChange={(e) => {
+                    setDiscount(Number(e.target.value));
+                    setExtraDiscount(0);
+                  }}
+                >
+                  {DISCOUNTS.map((d) => (
+                    <option key={d} value={d}>
+                      {d === 0 ? 'No Discount' : `${d}% Off`}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => setExtraDiscount((prev) => prev + 5)}
+                  className="bg-[#78ba44] hover:bg-[#65a037] text-white px-3 py-2 rounded-md font-bold transition-colors whitespace-nowrap shadow-sm"
+                  title="Add additional 5% discount"
+                >
+                  + 5%
+                </button>
+                {extraDiscount > 0 && (
+                  <button
+                    onClick={() => setExtraDiscount(0)}
+                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md font-bold transition-colors shadow-sm"
+                    title="Reset extra discount"
+                  >
+                    Reset
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -160,23 +182,27 @@ const PriceFinder = () => {
                 <thead className="bg-gray-50 dark:bg-[#78ba44]/10">
                   <tr>
                     <th className="px-2 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-[#78ba44] uppercase tracking-wider">Thickness</th>
-                    {discount === 0 ? (
+                    {discount === 0 && extraDiscount === 0 ? (
                       <th className="px-2 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-[#78ba44] uppercase tracking-wider">Price (₹)</th>
                     ) : (
                       <>
                         <th className="px-2 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-[#78ba44] uppercase tracking-wider">Original (₹)</th>
-                        <th className="px-2 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-[#78ba44] uppercase tracking-wider">Final (₹)</th>
+                        <th className="px-2 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-[#78ba44] uppercase tracking-wider">{discount === 0 ? 'Base' : `${discount}%`} (₹)</th>
+                        {extraDiscount > 0 && (
+                          <th className="px-2 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-[#78ba44] uppercase tracking-wider">{discount}% + {extraDiscount}% (₹)</th>
+                        )}
                       </>
                     )}
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white/10">
                   {currentSize.thicknessPrices.map((tp, idx) => {
-                    const finalPrice = tp.price * (1 - discount / 100);
+                    const discountedPrice = tp.price * (1 - discount / 100);
+                    const finalExtraPrice = discountedPrice * (1 - extraDiscount / 100);
                     return (
                       <tr key={idx} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
                         <td className="px-2 sm:px-6 py-3 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-200">{tp.thicknessInches}"</td>
-                        {discount === 0 ? (
+                        {discount === 0 && extraDiscount === 0 ? (
                           <td className="px-2 sm:px-6 py-3 whitespace-nowrap text-sm font-bold text-blue-900 dark:text-white">
                             ₹{tp.price.toLocaleString('en-IN')}
                           </td>
@@ -185,9 +211,14 @@ const PriceFinder = () => {
                             <td className="px-2 sm:px-6 py-3 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 line-through">
                               ₹{tp.price.toLocaleString('en-IN')}
                             </td>
-                            <td className="px-2 sm:px-6 py-3 whitespace-nowrap text-sm font-bold text-green-600 dark:text-[#78ba44]">
-                              ₹{finalPrice.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                            <td className={`px-2 sm:px-6 py-3 whitespace-nowrap text-sm font-bold ${extraDiscount > 0 ? 'text-gray-500 dark:text-gray-400 line-through' : 'text-green-600 dark:text-[#78ba44]'}`}>
+                              ₹{discountedPrice.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                             </td>
+                            {extraDiscount > 0 && (
+                              <td className="px-2 sm:px-6 py-3 whitespace-nowrap text-sm font-bold text-green-600 dark:text-[#78ba44]">
+                                ₹{finalExtraPrice.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
+                              </td>
+                            )}
                           </>
                         )}
                       </tr>
