@@ -13,6 +13,7 @@ const PriceFinder = () => {
   const [unit, setUnit] = useState<UnitType>('feet');
   const [discount, setDiscount] = useState<number>(0);
   const [extraDiscounts, setExtraDiscounts] = useState<number[]>([]);
+  const [modelSearch, setModelSearch] = useState('');
   const [isDark, setIsDark] = useState(
     () => localStorage.getItem('theme') !== 'light'
   );
@@ -52,6 +53,11 @@ const PriceFinder = () => {
     }
   };
 
+  const filteredModels = MATTRESS_DATA.filter((model) => {
+    const fullName = `${model.name} ${model.category || ''}`.toLowerCase();
+    return fullName.includes(modelSearch.toLowerCase());
+  });
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-[#181a43] dark:via-[#111330] dark:to-[#0a0b1d] transition-colors duration-300">
       <nav className="bg-blue-900 dark:bg-transparent dark:border-b dark:border-[#78ba44]/20 text-white p-4 flex justify-between items-center shadow-md dark:backdrop-blur-md">
@@ -83,6 +89,13 @@ const PriceFinder = () => {
             {/* Model Selection */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mattress Type / Model</label>
+              <input
+                type="text"
+                placeholder="Search mattress model..."
+                className="w-full bg-white dark:bg-[#111330] border-gray-300 dark:border-white/10 text-gray-900 dark:text-white rounded-md shadow-sm p-2 border focus:ring-2 focus:ring-[#78ba44] focus:border-transparent outline-none transition-colors mb-2"
+                value={modelSearch}
+                onChange={(e) => setModelSearch(e.target.value)}
+              />
               <select
                 className="w-full bg-white dark:bg-[#111330] border-gray-300 dark:border-white/10 text-gray-900 dark:text-white rounded-md shadow-sm p-2 border focus:ring-2 focus:ring-[#78ba44] focus:border-transparent outline-none transition-colors"
                 value={selectedModel}
@@ -94,7 +107,7 @@ const PriceFinder = () => {
                 }}
               >
                 <option value="">-- Select a Model --</option>
-                {MATTRESS_DATA.map((model) => (
+                {filteredModels.map((model) => (
                   <option key={model.id} value={model.id}>
                     {model.name} {model.category ? `(${model.category})` : ''}
                   </option>
@@ -147,7 +160,7 @@ const PriceFinder = () => {
                     setDiscount(Number(e.target.value));
                     setExtraDiscounts([]);
                   }}
-                  disabled={!selectedModel}
+                  disabled={!selectedSize}
                 >
                   {DISCOUNTS.map((d) => (
                     <option key={d} value={d}>
@@ -159,7 +172,7 @@ const PriceFinder = () => {
                   onClick={() => setExtraDiscounts((prev) => [...prev, 5])}
                   className="bg-[#78ba44] hover:bg-[#65a037] text-white px-3 py-2 rounded-md font-bold transition-colors whitespace-nowrap shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Add additional 5% discount"
-                  disabled={!selectedModel}
+                  disabled={!selectedSize}
                 >
                   + 5%
                 </button>
@@ -167,7 +180,7 @@ const PriceFinder = () => {
                   onClick={() => setExtraDiscounts((prev) => [...prev, 3])}
                   className="bg-[#78ba44] hover:bg-[#65a037] text-white px-3 py-2 rounded-md font-bold transition-colors whitespace-nowrap shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Add additional 3% discount"
-                  disabled={!selectedModel}
+                  disabled={!selectedSize}
                 >
                   + 3%
                 </button>
@@ -176,7 +189,7 @@ const PriceFinder = () => {
                     onClick={() => setExtraDiscounts([])}
                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md font-bold transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Reset extra discount"
-                    disabled={!selectedModel}
+                    disabled={!selectedSize}
                   >
                     Reset
                   </button>
