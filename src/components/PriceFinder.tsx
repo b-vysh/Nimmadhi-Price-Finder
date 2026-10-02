@@ -29,7 +29,7 @@ const PriceFinder = () => {
   }, [isDark]);
 
   const handleLogout = () => {
-    sessionStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('isAuthenticated');
     navigate('/login');
   };
 
@@ -203,7 +203,7 @@ const PriceFinder = () => {
         {currentSize && (
           <div className="bg-white dark:bg-[#181a43]/40 dark:backdrop-blur-xl dark:border dark:border-[#78ba44]/20 rounded-lg shadow-xl p-4 sm:p-6 transition-colors duration-300">
             <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-4">Prices by Thickness</h3>
-            <div className="overflow-x-hidden rounded-md border border-gray-200 dark:border-white/10">
+            <div className="overflow-x-auto rounded-md border border-gray-200 dark:border-white/10">
               <table className="min-w-full divide-y divide-gray-200 dark:divide-white/10">
                 <thead className="bg-gray-50 dark:bg-[#78ba44]/10">
                   <tr>

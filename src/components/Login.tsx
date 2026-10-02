@@ -19,7 +19,7 @@ const Login = () => {
       username.trim().toLowerCase() === envUsername.trim().toLowerCase() && 
       password.trim() === envPassword.trim()
     ) {
-      sessionStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('isAuthenticated', 'true');
       navigate('/');
     } else {
       setError('Invalid username or password');
