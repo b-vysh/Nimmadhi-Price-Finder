@@ -180,7 +180,7 @@ export const STANDARD_SIZES: Record<string, MattressSize> = {
 export const MATTRESS_DATA: MattressModel[] = [
   {
     "id": "100s-coir-foam",
-    "name": "100'S COIR (OR) 100'S FOAM QUILT MODEL",
+    "name": "NIM 100S COIR",
     "category": "",
     "sourcePriceList": "100'S COIR / FOAM",
     "sizes": [
@@ -305,8 +305,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "smart-joy-single",
-    "name": "SMART JOY",
-    "category": "SINGLE QUILT",
+    "name": "NIM SMART D/JOY",
+      "category": "",
     "sourcePriceList": "SMART-COIR-ECONOMY",
     "sizes": [
       {
@@ -495,8 +495,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "smart-joy-double",
-    "name": "SMART JOY",
-    "category": "DOUBLE QUILT",
+    "name": "NIM SMART S/JOY",
+      "category": "",
     "sourcePriceList": "SMART-COIR-ECONOMY",
     "sizes": [
       {
@@ -685,8 +685,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "100d-anbu-double",
-    "name": "100D HIGH END MATTRESSES",
-    "category": "ANBU DOUBLE SIDE QUILT",
+    "name": "100D D/ANBU",
+      "category": "",
     "sourcePriceList": "100D HIGH END",
     "sizes": [
       {
@@ -966,7 +966,7 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "prakasam-bonnell",
-    "name": "PRAKASAM SPRING BONNELL",
+    "name": "NIM PRAKASAM BONNELL",
     "category": "",
     "sourcePriceList": "PRAKASAM BONNELL",
     "sizes": [
@@ -1127,8 +1127,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "prakasam-pocket",
-    "name": "PRAKASAM SPRING POCKET",
-    "category": "",
+    "name": "NIM PRAKASAM POCKET",
+      "category": "",
     "sourcePriceList": "PRAKASAM POCKET",
     "sizes": [
       {
@@ -1288,8 +1288,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "magizhchi-std",
-    "name": "MAGIZHCHI BONNELL",
-    "category": "STANDARD",
+    "name": "NIM MAG BONNELL",
+      "category": "",
     "sourcePriceList": "MAGIZHCHI BONNELL",
     "sizes": [
       {
@@ -1585,8 +1585,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "magizhchi-pillow",
-    "name": "MAGIZHCHI BONNELL",
-    "category": "PILLOW TOP DOUBLE SIDE",
+    "name": "NIM MAG BONNELL ET",
+      "category": "",
     "sourcePriceList": "MAGIZHCHI BONNELL",
     "sizes": [
       {
@@ -1882,8 +1882,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "magizhchi-euro",
-    "name": "MAGIZHCHI BONNELL",
-    "category": "EURO SUPER SOFT FOAM WITH TOP",
+    "name": "NIM MAG BONNELL PT",
+      "category": "",
     "sourcePriceList": "MAGIZHCHI BONNELL",
     "sizes": [
       {
@@ -2179,8 +2179,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "inimai-std",
-    "name": "INIMAI POCKETED",
-    "category": "INIMAI POCKETED STANDARD",
+    "name": "NIM INIMAI POCKTED",
+      "category": "",
     "sourcePriceList": "INIMAI POCKETED",
     "sizes": [
       {
@@ -2476,8 +2476,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "inimai-mem",
-    "name": "INIMAI POCKETED",
-    "category": "INIMAI POCKETED MEMORY FOAM EURO TOP",
+    "name": "NIM INIMAI POCKTED MEMORY ET",
+      "category": "",
     "sourcePriceList": "INIMAI POCKETED",
     "sizes": [
       {
@@ -2773,8 +2773,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "inimai-lat",
-    "name": "INIMAI POCKETED",
-    "category": "INIMAI POCKETED LATEX FOAM EURO TOP",
+    "name": "NIM INIMAI POCKTED LATEX ET",
+      "category": "",
     "sourcePriceList": "INIMAI POCKETED",
     "sizes": [
       {
@@ -3070,8 +3070,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "anandham-memory",
-    "name": "Anandham Memory Foam (OR) COIR",
-    "category": "",
+    "name": "NIM ANANDHAM FOAM MEM",
+      "category": "",
     "sourcePriceList": "ANANDHAM MEMORY FOAM",
     "sizes": [
       {
@@ -3208,8 +3208,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "anandham-latex",
-    "name": "Anandham LATEX Foam (OR) COIR",
-    "category": "",
+    "name": "NIM ANANDHAM FOAM LATEX",
+      "category": "",
     "sourcePriceList": "ANANDHAM LATEX FOAM",
     "sizes": [
       {
@@ -3346,8 +3346,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "supersleep-single-joy",
-    "name": "SUPER SLEEP",
-    "category": "SINGLE JOY",
+    "name": "NIM SU.SL S/JOY",
+      "category": "",
     "sourcePriceList": "SUPER SLEEP",
     "sizes": [
       {
@@ -3524,8 +3524,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "supersleep-double-joy",
-    "name": "SUPER SLEEP",
-    "category": "DOUBLE JOY",
+    "name": "NIM SU.SL D/JOY",
+      "category": "",
     "sourcePriceList": "SUPER SLEEP",
     "sizes": [
       {
@@ -3702,8 +3702,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "supersleep-single-anbu",
-    "name": "SUPER SLEEP",
-    "category": "SINGLE ANBU",
+    "name": "NIM SU.SL S/ANBU",
+      "category": "",
     "sourcePriceList": "SUPER SLEEP",
     "sizes": [
       {
@@ -3880,8 +3880,8 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "supersleep-double-anbu",
-    "name": "SUPER SLEEP",
-    "category": "DOUBLE ANBU",
+    "name": "NIM SU.SL D/ANBU",
+      "category": "",
     "sourcePriceList": "SUPER SLEEP",
     "sizes": [
       {
@@ -4058,9 +4058,9 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "amaithi-full-latex",
-    "name": "AMAITHI FULL LATEX",
+    "name": "NIM AMAITHI FULL LATEX",
     "category": "",
-    "sourcePriceList": "AMAITHI FULL LATEX",
+    "sourcePriceList": "NIM AMAITHI FULL LATEX",
     "sizes": [
       {
         "sizeId": "6X3",
@@ -4287,9 +4287,9 @@ export const MATTRESS_DATA: MattressModel[] = [
   },
   {
     "id": "amaithi-hs-latex",
-    "name": "AMAITHI H&S LATEX",
+    "name": "NIM AMAITHI H&S LATEX",
     "category": "",
-    "sourcePriceList": "AMAITHI H&S LATEX",
+    "sourcePriceList": "NIM AMAITHI H&S LATEX",
     "sizes": [
       {
         "sizeId": "6X3",
