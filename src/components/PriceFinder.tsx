@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MATTRESS_DATA, STANDARD_SIZES } from '../data/mattresses';
+import { TOPPER_DATA } from '../data/toppers';
 import { Moon, Sun } from 'lucide-react';
 
 const DISCOUNTS = [0, 10, 20, 30, 40, 50];
 type UnitType = 'feet' | 'inches' | 'metric';
+type TabType = 'mattress' | 'topper';
 
 const PriceFinder = () => {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<TabType>('mattress');
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
   const [unit, setUnit] = useState<UnitType>('feet');
@@ -35,7 +38,8 @@ const PriceFinder = () => {
 
   const toggleTheme = () => setIsDark(!isDark);
 
-  const currentModel = MATTRESS_DATA.find((m) => m.id === selectedModel);
+  const currentDataset = activeTab === 'mattress' ? MATTRESS_DATA : TOPPER_DATA;
+  const currentModel = currentDataset.find((m) => m.id === selectedModel);
   const currentSize = currentModel?.sizes.find((s) => s.sizeId === selectedSize);
 
   const getSizeDisplay = (sizeId: string) => {
@@ -53,10 +57,21 @@ const PriceFinder = () => {
     }
   };
 
-  const filteredModels = MATTRESS_DATA.filter((model) => {
+  const filteredModels = currentDataset.filter((model) => {
     const fullName = `${model.name} ${model.category || ''}`.toLowerCase();
     return fullName.includes(modelSearch.toLowerCase());
   });
+
+  const handleTabChange = (newTab: TabType) => {
+    if (activeTab !== newTab) {
+      setActiveTab(newTab);
+      setSelectedModel('');
+      setSelectedSize('');
+      setDiscount(0);
+      setExtraDiscounts([]);
+      setModelSearch('');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-[#181a43] dark:via-[#111330] dark:to-[#0a0b1d] transition-colors duration-300">
@@ -80,18 +95,46 @@ const PriceFinder = () => {
       </nav>
 
       <main className="max-w-4xl mx-auto p-6">
+        {/* Navigation Tabs */}
+        <div className="flex gap-3 mb-6">
+          <button
+            type="button"
+            onClick={() => handleTabChange('mattress')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-all shadow-sm ${
+              activeTab === 'mattress'
+                ? 'bg-blue-600 dark:bg-[#78ba44] text-white shadow-md'
+                : 'bg-white dark:bg-[#181a43]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10'
+            }`}
+          >
+            <span>🛏️</span> Mattresses
+          </button>
+          <button
+            type="button"
+            onClick={() => handleTabChange('topper')}
+            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg font-bold text-sm transition-all shadow-sm ${
+              activeTab === 'topper'
+                ? 'bg-blue-600 dark:bg-[#78ba44] text-white shadow-md'
+                : 'bg-white dark:bg-[#181a43]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10'
+            }`}
+          >
+            <span>☁️</span> Mattress Toppers
+          </button>
+        </div>
+
         <div className="bg-white dark:bg-[#181a43]/40 dark:backdrop-blur-xl dark:border dark:border-[#78ba44]/20 rounded-lg shadow-xl p-6 mb-6 transition-colors duration-300">
           <h2 className="text-lg font-semibold mb-4 border-b dark:border-white/10 pb-2 text-gray-800 dark:text-white">
-            Select Mattress Options
+            Select {activeTab === 'mattress' ? 'Mattress' : 'Topper'} Options
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Model Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Mattress Type / Model</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                {activeTab === 'mattress' ? 'Mattress Type / Model' : 'Topper Type'}
+              </label>
               <input
                 type="text"
-                placeholder="Search mattress model..."
+                placeholder={activeTab === 'mattress' ? 'Search mattress model...' : 'Search topper...'}
                 className="w-full bg-white dark:bg-[#111330] border-gray-300 dark:border-white/10 text-gray-900 dark:text-white rounded-md shadow-sm p-2 border focus:ring-2 focus:ring-[#78ba44] focus:border-transparent outline-none transition-colors mb-2"
                 value={modelSearch}
                 onChange={(e) => setModelSearch(e.target.value)}
@@ -106,7 +149,7 @@ const PriceFinder = () => {
                   setExtraDiscounts([]); // Reset extra discount
                 }}
               >
-                <option value="">-- Select a Model --</option>
+                <option value="">-- Select a {activeTab === 'mattress' ? 'Model' : 'Topper'} --</option>
                 {filteredModels.map((model) => (
                   <option key={model.id} value={model.id}>
                     {model.name} {model.category ? `(${model.category})` : ''}
@@ -169,6 +212,7 @@ const PriceFinder = () => {
                   ))}
                 </select>
                 <button
+                  type="button"
                   onClick={() => setExtraDiscounts((prev) => [...prev, 5])}
                   className="bg-[#78ba44] hover:bg-[#65a037] text-white px-3 py-2 rounded-md font-bold transition-colors whitespace-nowrap shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Add additional 5% discount"
@@ -177,6 +221,7 @@ const PriceFinder = () => {
                   + 5%
                 </button>
                 <button
+                  type="button"
                   onClick={() => setExtraDiscounts((prev) => [...prev, 3])}
                   className="bg-[#78ba44] hover:bg-[#65a037] text-white px-3 py-2 rounded-md font-bold transition-colors whitespace-nowrap shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Add additional 3% discount"
@@ -186,6 +231,7 @@ const PriceFinder = () => {
                 </button>
                 {extraDiscounts.length > 0 && (
                   <button
+                    type="button"
                     onClick={() => setExtraDiscounts([])}
                     className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md font-bold transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Reset extra discount"
