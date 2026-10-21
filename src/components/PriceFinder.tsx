@@ -192,56 +192,58 @@ const PriceFinder = () => {
               </select>
             </div>
             
-            {/* Discount Selection */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Apply Discount</label>
-              <div className="flex gap-2 flex-wrap">
-                <select
-                  className="flex-1 bg-white dark:bg-[#111330] border-gray-300 dark:border-white/10 text-gray-900 dark:text-white rounded-md shadow-sm p-2 border focus:ring-2 focus:ring-[#78ba44] focus:border-transparent outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  value={discount}
-                  onChange={(e) => {
-                    setDiscount(Number(e.target.value));
-                    setExtraDiscounts([]);
-                  }}
-                  disabled={!selectedSize}
-                >
-                  {DISCOUNTS.map((d) => (
-                    <option key={d} value={d}>
-                      {d === 0 ? 'No Discount' : `${d}% Off`}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  type="button"
-                  onClick={() => setExtraDiscounts((prev) => [...prev, 5])}
-                  className="bg-[#78ba44] hover:bg-[#65a037] text-white px-3 py-2 rounded-md font-bold transition-colors whitespace-nowrap shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                  title="Add additional 5% discount"
-                  disabled={!selectedSize}
-                >
-                  + 5%
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setExtraDiscounts((prev) => [...prev, 3])}
-                  className="bg-[#78ba44] hover:bg-[#65a037] text-white px-3 py-2 rounded-md font-bold transition-colors whitespace-nowrap shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                  title="Add additional 3% discount"
-                  disabled={!selectedSize}
-                >
-                  + 3%
-                </button>
-                {extraDiscounts.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setExtraDiscounts([])}
-                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md font-bold transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-                    title="Reset extra discount"
+            {/* Discount Selection - Only for Mattresses */}
+            {activeTab === 'mattress' && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Apply Discount</label>
+                <div className="flex gap-2 flex-wrap">
+                  <select
+                    className="flex-1 bg-white dark:bg-[#111330] border-gray-300 dark:border-white/10 text-gray-900 dark:text-white rounded-md shadow-sm p-2 border focus:ring-2 focus:ring-[#78ba44] focus:border-transparent outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    value={discount}
+                    onChange={(e) => {
+                      setDiscount(Number(e.target.value));
+                      setExtraDiscounts([]);
+                    }}
                     disabled={!selectedSize}
                   >
-                    Reset
+                    {DISCOUNTS.map((d) => (
+                      <option key={d} value={d}>
+                        {d === 0 ? 'No Discount' : `${d}% Off`}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => setExtraDiscounts((prev) => [...prev, 5])}
+                    className="bg-[#78ba44] hover:bg-[#65a037] text-white px-3 py-2 rounded-md font-bold transition-colors whitespace-nowrap shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Add additional 5% discount"
+                    disabled={!selectedSize}
+                  >
+                    + 5%
                   </button>
-                )}
+                  <button
+                    type="button"
+                    onClick={() => setExtraDiscounts((prev) => [...prev, 3])}
+                    className="bg-[#78ba44] hover:bg-[#65a037] text-white px-3 py-2 rounded-md font-bold transition-colors whitespace-nowrap shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                    title="Add additional 3% discount"
+                    disabled={!selectedSize}
+                  >
+                    + 3%
+                  </button>
+                  {extraDiscounts.length > 0 && (
+                    <button
+                      type="button"
+                      onClick={() => setExtraDiscounts([])}
+                      className="bg-red-500 hover:bg-red-600 text-white px-3 py-2 rounded-md font-bold transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Reset extra discount"
+                      disabled={!selectedSize}
+                    >
+                      Reset
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
