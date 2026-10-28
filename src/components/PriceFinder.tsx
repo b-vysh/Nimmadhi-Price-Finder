@@ -6,11 +6,27 @@ import { SLIMBED_DATA } from '../data/slimbeds';
 import { PROTECTOR_DATA } from '../data/protectors';
 import { PILLOW_DATA } from '../data/pillows';
 import { BEDSPREAD_DATA } from '../data/bedspreads';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Menu, X, ChevronDown, Check } from 'lucide-react';
 
 const DISCOUNTS = [0, 10, 20, 30, 40, 50];
 type UnitType = 'feet' | 'inches' | 'metric';
 type TabType = 'mattress' | 'topper' | 'slimbed' | 'protector' | 'pillow' | 'bedspread';
+
+interface CategoryOption {
+  id: TabType;
+  label: string;
+  icon: string;
+  subtitle: string;
+}
+
+const CATEGORIES: CategoryOption[] = [
+  { id: 'mattress', label: 'Mattresses', icon: '🛏️', subtitle: 'Standard & Premium Mattresses' },
+  { id: 'topper', label: 'Mattress Toppers', icon: '☁️', subtitle: 'Memory, Latex & PU 2" Toppers' },
+  { id: 'slimbed', label: 'Slim & Folding Beds', icon: '🛌', subtitle: 'Foam Slimbeds & Folding Beds' },
+  { id: 'protector', label: 'Waterproof Protectors', icon: '🛡️', subtitle: '12" PRO Fitted Protectors' },
+  { id: 'pillow', label: 'Pillows', icon: '🪶', subtitle: 'Micro, Foam, Latex & Memory Pillows' },
+  { id: 'bedspread', label: 'Bed Spreads & Comforter', icon: '✨', subtitle: 'Bed Spreads, 7D Prints & Comforters' },
+];
 
 const PriceFinder = () => {
   const navigate = useNavigate();
@@ -21,6 +37,8 @@ const PriceFinder = () => {
   const [discount, setDiscount] = useState<number>(0);
   const [extraDiscounts, setExtraDiscounts] = useState<number[]>([]);
   const [modelSearch, setModelSearch] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDark, setIsDark] = useState(
     () => localStorage.getItem('theme') !== 'light'
   );
@@ -50,6 +68,8 @@ const PriceFinder = () => {
 
   const currentModel = currentDataset.find((m) => m.id === selectedModel);
   const currentSize = currentModel?.sizes.find((s) => s.sizeId === selectedSize);
+
+  const currentCategory = CATEGORIES.find((c) => c.id === activeTab) || CATEGORIES[0];
 
   const getSizeDisplay = (sizeId: string) => {
     const sizeData = STANDARD_SIZES[sizeId];
@@ -90,6 +110,8 @@ const PriceFinder = () => {
       setExtraDiscounts([]);
       setModelSearch('');
     }
+    setIsDropdownOpen(false);
+    setIsDrawerOpen(false);
   };
 
   const getTabTitle = () => {
@@ -109,9 +131,20 @@ const PriceFinder = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-[#181a43] dark:via-[#111330] dark:to-[#0a0b1d] transition-colors duration-300">
-      <nav className="bg-blue-900 dark:bg-transparent dark:border-b dark:border-[#78ba44]/20 text-white p-4 flex justify-between items-center shadow-md dark:backdrop-blur-md">
-        <h1 className="text-xl font-bold dark:text-[#78ba44]">Nimmadhi Price Finder</h1>
-        <div className="flex items-center gap-4">
+      {/* Top Navbar */}
+      <nav className="bg-blue-900 dark:bg-transparent dark:border-b dark:border-[#78ba44]/20 text-white p-4 flex justify-between items-center shadow-md dark:backdrop-blur-md sticky top-0 z-30">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setIsDrawerOpen(true)}
+            className="p-2 -ml-1 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-1.5 focus:outline-none"
+            aria-label="Open Category Menu"
+          >
+            <Menu size={22} className="text-[#78ba44]" />
+            <span className="font-bold text-sm tracking-wide">Menu</span>
+          </button>
+          <h1 className="text-lg sm:text-xl font-bold dark:text-[#78ba44]">Nimmadhi Price Finder</h1>
+        </div>
+        <div className="flex items-center gap-3">
           <button
             onClick={toggleTheme}
             className="p-2 rounded-full hover:bg-white/10 transition-colors focus:outline-none"
@@ -121,85 +154,145 @@ const PriceFinder = () => {
           </button>
           <button
             onClick={handleLogout}
-            className="bg-blue-800 dark:bg-white/10 hover:bg-blue-700 dark:hover:bg-white/20 px-4 py-2 rounded text-sm font-semibold transition"
+            className="bg-blue-800 dark:bg-white/10 hover:bg-blue-700 dark:hover:bg-white/20 px-3.5 py-1.5 rounded text-sm font-semibold transition"
           >
             Logout
           </button>
         </div>
       </nav>
 
+      {/* Slide-over Side Drawer Menu */}
+      {isDrawerOpen && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity"
+            onClick={() => setIsDrawerOpen(false)}
+          />
+          <aside className="fixed inset-y-0 left-0 max-w-xs w-full bg-white dark:bg-[#111330] shadow-2xl z-50 flex flex-col justify-between border-r dark:border-[#78ba44]/30 animate-in slide-in-from-left duration-200">
+            <div>
+              <div className="p-4 border-b dark:border-white/10 flex items-center justify-between">
+                <div>
+                  <h2 className="text-base font-bold text-gray-900 dark:text-white">Price Categories</h2>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">Select product type to view prices</p>
+                </div>
+                <button
+                  onClick={() => setIsDrawerOpen(false)}
+                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 text-gray-500 dark:text-gray-300"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="p-3 space-y-1">
+                {CATEGORIES.map((cat) => {
+                  const isActive = activeTab === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => handleTabChange(cat.id)}
+                      className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-left transition-all ${
+                        isActive
+                          ? 'bg-blue-600 dark:bg-[#78ba44] text-white font-bold shadow-md'
+                          : 'hover:bg-gray-100 dark:hover:bg-white/5 text-gray-700 dark:text-gray-200'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{cat.icon}</span>
+                        <div>
+                          <div className="text-sm font-semibold">{cat.label}</div>
+                          <div className={`text-xs ${isActive ? 'text-white/80' : 'text-gray-400 dark:text-gray-500'}`}>
+                            {cat.subtitle}
+                          </div>
+                        </div>
+                      </div>
+                      {isActive && <Check size={18} />}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="p-4 border-t dark:border-white/10 text-center text-xs text-gray-400">
+              Nimmadhi Sleep Solutions
+            </div>
+          </aside>
+        </>
+      )}
+
       <main className="max-w-4xl mx-auto p-4 sm:p-6">
-        {/* Navigation Tabs */}
-        <div className="flex gap-2 sm:gap-3 mb-6 overflow-x-auto pb-2 scrollbar-none">
+        {/* Category Menu Selector */}
+        <div className="relative mb-6">
+          <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">
+            Selected Category
+          </label>
           <button
             type="button"
-            onClick={() => handleTabChange('mattress')}
-            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg font-bold text-sm whitespace-nowrap transition-all shadow-sm ${
-              activeTab === 'mattress'
-                ? 'bg-blue-600 dark:bg-[#78ba44] text-white shadow-md'
-                : 'bg-white dark:bg-[#181a43]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10'
-            }`}
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="w-full flex items-center justify-between p-3.5 sm:p-4 bg-white dark:bg-[#181a43]/60 dark:backdrop-blur-xl border border-gray-200 dark:border-[#78ba44]/30 rounded-xl shadow-md text-left transition-all hover:border-[#78ba44]"
           >
-            <span>🛏️</span> Mattresses
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">{currentCategory.icon}</span>
+              <div>
+                <div className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
+                  {currentCategory.label}
+                </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  {currentCategory.subtitle}
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-blue-50 dark:bg-[#78ba44]/20 text-blue-700 dark:text-[#78ba44] border border-blue-200 dark:border-[#78ba44]/30">
+                Menu ▾
+              </span>
+              <ChevronDown
+                className={`transition-transform duration-200 text-gray-500 dark:text-gray-400 ${
+                  isDropdownOpen ? 'rotate-180 text-[#78ba44]' : ''
+                }`}
+                size={20}
+              />
+            </div>
           </button>
-          <button
-            type="button"
-            onClick={() => handleTabChange('topper')}
-            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg font-bold text-sm whitespace-nowrap transition-all shadow-sm ${
-              activeTab === 'topper'
-                ? 'bg-blue-600 dark:bg-[#78ba44] text-white shadow-md'
-                : 'bg-white dark:bg-[#181a43]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10'
-            }`}
-          >
-            <span>☁️</span> Toppers
-          </button>
-          <button
-            type="button"
-            onClick={() => handleTabChange('slimbed')}
-            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg font-bold text-sm whitespace-nowrap transition-all shadow-sm ${
-              activeTab === 'slimbed'
-                ? 'bg-blue-600 dark:bg-[#78ba44] text-white shadow-md'
-                : 'bg-white dark:bg-[#181a43]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10'
-            }`}
-          >
-            <span>🛌</span> Slim & Folding Beds
-          </button>
-          <button
-            type="button"
-            onClick={() => handleTabChange('protector')}
-            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg font-bold text-sm whitespace-nowrap transition-all shadow-sm ${
-              activeTab === 'protector'
-                ? 'bg-blue-600 dark:bg-[#78ba44] text-white shadow-md'
-                : 'bg-white dark:bg-[#181a43]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10'
-            }`}
-          >
-            <span>🛡️</span> Protectors
-          </button>
-          <button
-            type="button"
-            onClick={() => handleTabChange('pillow')}
-            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg font-bold text-sm whitespace-nowrap transition-all shadow-sm ${
-              activeTab === 'pillow'
-                ? 'bg-blue-600 dark:bg-[#78ba44] text-white shadow-md'
-                : 'bg-white dark:bg-[#181a43]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10'
-            }`}
-          >
-            <span>🪶</span> Pillows
-          </button>
-          <button
-            type="button"
-            onClick={() => handleTabChange('bedspread')}
-            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg font-bold text-sm whitespace-nowrap transition-all shadow-sm ${
-              activeTab === 'bedspread'
-                ? 'bg-blue-600 dark:bg-[#78ba44] text-white shadow-md'
-                : 'bg-white dark:bg-[#181a43]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10'
-            }`}
-          >
-            <span>✨</span> Bed Spreads & Comforter
-          </button>
+
+          {/* Dropdown Menu List */}
+          {isDropdownOpen && (
+            <>
+              <div 
+                className="fixed inset-0 z-10" 
+                onClick={() => setIsDropdownOpen(false)} 
+              />
+              <div className="absolute z-20 left-0 right-0 mt-2 bg-white dark:bg-[#111330] border border-gray-200 dark:border-[#78ba44]/30 rounded-xl shadow-2xl overflow-hidden py-1 divide-y divide-gray-100 dark:divide-white/5 animate-in fade-in duration-100">
+                {CATEGORIES.map((cat) => {
+                  const isActive = activeTab === cat.id;
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => handleTabChange(cat.id)}
+                      className={`w-full flex items-center justify-between px-4 py-3.5 text-left transition-colors ${
+                        isActive
+                          ? 'bg-blue-50 dark:bg-[#78ba44]/20 text-blue-900 dark:text-[#78ba44] font-bold'
+                          : 'hover:bg-gray-50 dark:hover:bg-white/5 text-gray-700 dark:text-gray-200'
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{cat.icon}</span>
+                        <div>
+                          <div className="text-sm font-semibold">{cat.label}</div>
+                          <div className="text-xs text-gray-400 dark:text-gray-500">{cat.subtitle}</div>
+                        </div>
+                      </div>
+                      {isActive && <Check className="text-[#78ba44]" size={20} />}
+                    </button>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </div>
 
-        {/* PILLOWS TAB VIEW */}
+        {/* PILLOWS VIEW */}
         {activeTab === 'pillow' && (
           <div className="bg-white dark:bg-[#181a43]/40 dark:backdrop-blur-xl dark:border dark:border-[#78ba44]/20 rounded-lg shadow-xl p-4 sm:p-6 mb-6 transition-colors duration-300">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b dark:border-white/10 pb-4 mb-4">
