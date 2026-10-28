@@ -2,13 +2,15 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MATTRESS_DATA, STANDARD_SIZES } from '../data/mattresses';
 import { TOPPER_DATA } from '../data/toppers';
+import { SLIMBED_DATA } from '../data/slimbeds';
 import { PROTECTOR_DATA } from '../data/protectors';
 import { PILLOW_DATA } from '../data/pillows';
+import { BEDSPREAD_DATA } from '../data/bedspreads';
 import { Moon, Sun } from 'lucide-react';
 
 const DISCOUNTS = [0, 10, 20, 30, 40, 50];
 type UnitType = 'feet' | 'inches' | 'metric';
-type TabType = 'mattress' | 'topper' | 'protector' | 'pillow';
+type TabType = 'mattress' | 'topper' | 'slimbed' | 'protector' | 'pillow' | 'bedspread';
 
 const PriceFinder = () => {
   const navigate = useNavigate();
@@ -43,6 +45,7 @@ const PriceFinder = () => {
   const currentDataset = 
     activeTab === 'mattress' ? MATTRESS_DATA : 
     activeTab === 'topper' ? TOPPER_DATA : 
+    activeTab === 'slimbed' ? SLIMBED_DATA :
     activeTab === 'protector' ? PROTECTOR_DATA : [];
 
   const currentModel = currentDataset.find((m) => m.id === selectedModel);
@@ -72,6 +75,12 @@ const PriceFinder = () => {
     item.name.toLowerCase().includes(modelSearch.toLowerCase())
   );
 
+  const filteredBedSpreads = BEDSPREAD_DATA.filter((item) =>
+    `${item.name} ${item.category} ${item.size} ${item.pillowCovers}`
+      .toLowerCase()
+      .includes(modelSearch.toLowerCase())
+  );
+
   const handleTabChange = (newTab: TabType) => {
     if (activeTab !== newTab) {
       setActiveTab(newTab);
@@ -80,6 +89,21 @@ const PriceFinder = () => {
       setDiscount(0);
       setExtraDiscounts([]);
       setModelSearch('');
+    }
+  };
+
+  const getTabTitle = () => {
+    switch (activeTab) {
+      case 'mattress':
+        return 'Mattress';
+      case 'topper':
+        return 'Topper';
+      case 'slimbed':
+        return 'Slim / Folding Bed';
+      case 'protector':
+        return 'Protector';
+      default:
+        return 'Options';
     }
   };
 
@@ -127,7 +151,18 @@ const PriceFinder = () => {
                 : 'bg-white dark:bg-[#181a43]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10'
             }`}
           >
-            <span>☁️</span> Mattress Toppers
+            <span>☁️</span> Toppers
+          </button>
+          <button
+            type="button"
+            onClick={() => handleTabChange('slimbed')}
+            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg font-bold text-sm whitespace-nowrap transition-all shadow-sm ${
+              activeTab === 'slimbed'
+                ? 'bg-blue-600 dark:bg-[#78ba44] text-white shadow-md'
+                : 'bg-white dark:bg-[#181a43]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10'
+            }`}
+          >
+            <span>🛌</span> Slim & Folding Beds
           </button>
           <button
             type="button"
@@ -151,10 +186,21 @@ const PriceFinder = () => {
           >
             <span>🪶</span> Pillows
           </button>
+          <button
+            type="button"
+            onClick={() => handleTabChange('bedspread')}
+            className={`flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-lg font-bold text-sm whitespace-nowrap transition-all shadow-sm ${
+              activeTab === 'bedspread'
+                ? 'bg-blue-600 dark:bg-[#78ba44] text-white shadow-md'
+                : 'bg-white dark:bg-[#181a43]/60 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10'
+            }`}
+          >
+            <span>✨</span> Bed Spreads & Comforter
+          </button>
         </div>
 
         {/* PILLOWS TAB VIEW */}
-        {activeTab === 'pillow' ? (
+        {activeTab === 'pillow' && (
           <div className="bg-white dark:bg-[#181a43]/40 dark:backdrop-blur-xl dark:border dark:border-[#78ba44]/20 rounded-lg shadow-xl p-4 sm:p-6 mb-6 transition-colors duration-300">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b dark:border-white/10 pb-4 mb-4">
               <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
@@ -203,26 +249,103 @@ const PriceFinder = () => {
               </table>
             </div>
           </div>
-        ) : (
-          /* MATTRESS, TOPPER & PROTECTOR VIEW */
+        )}
+
+        {/* BED SPREADS & COMFORTERS VIEW */}
+        {activeTab === 'bedspread' && (
+          <div className="bg-white dark:bg-[#181a43]/40 dark:backdrop-blur-xl dark:border dark:border-[#78ba44]/20 rounded-lg shadow-xl p-4 sm:p-6 mb-6 transition-colors duration-300">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b dark:border-white/10 pb-4 mb-4">
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
+                Bed Spreads & Comforter Price List
+              </h2>
+              <input
+                type="text"
+                placeholder="Search bed spread, comforter..."
+                className="w-full sm:w-64 bg-white dark:bg-[#111330] border-gray-300 dark:border-white/10 text-gray-900 dark:text-white rounded-md shadow-sm p-2 border focus:ring-2 focus:ring-[#78ba44] focus:border-transparent outline-none transition-colors"
+                value={modelSearch}
+                onChange={(e) => setModelSearch(e.target.value)}
+              />
+            </div>
+
+            <div className="overflow-x-auto rounded-md border border-gray-200 dark:border-white/10">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-white/10">
+                <thead className="bg-gray-50 dark:bg-[#78ba44]/10">
+                  <tr>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-[#78ba44] uppercase tracking-wider">
+                      Item / Model
+                    </th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-[#78ba44] uppercase tracking-wider">
+                      Type
+                    </th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-[#78ba44] uppercase tracking-wider">
+                      Size
+                    </th>
+                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-bold text-gray-500 dark:text-[#78ba44] uppercase tracking-wider">
+                      Pillow Covers
+                    </th>
+                    <th className="px-4 sm:px-6 py-3 text-right text-xs font-bold text-gray-500 dark:text-[#78ba44] uppercase tracking-wider">
+                      Price (₹)
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white/10">
+                  {filteredBedSpreads.map((item) => (
+                    <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                      <td className="px-4 sm:px-6 py-3.5 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-200">
+                        {item.name}
+                      </td>
+                      <td className="px-4 sm:px-6 py-3.5 whitespace-nowrap text-xs font-semibold">
+                        <span className={`px-2 py-0.5 rounded-full ${
+                          item.category === '7D Print'
+                            ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
+                            : item.category === 'Comforter'
+                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
+                            : 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-[#78ba44]'
+                        }`}>
+                          {item.category}
+                        </span>
+                      </td>
+                      <td className="px-4 sm:px-6 py-3.5 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 font-mono">
+                        {item.size}
+                      </td>
+                      <td className="px-4 sm:px-6 py-3.5 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                        {item.pillowCovers}
+                      </td>
+                      <td className="px-4 sm:px-6 py-3.5 whitespace-nowrap text-sm font-bold text-right text-blue-900 dark:text-white">
+                        ₹{item.price.toLocaleString('en-IN')}
+                      </td>
+                    </tr>
+                  ))}
+                  {filteredBedSpreads.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                        No items found matching "{modelSearch}"
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* MATTRESS, TOPPER, SLIMBED & PROTECTOR VIEW */}
+        {activeTab !== 'pillow' && activeTab !== 'bedspread' && (
           <>
             <div className="bg-white dark:bg-[#181a43]/40 dark:backdrop-blur-xl dark:border dark:border-[#78ba44]/20 rounded-lg shadow-xl p-6 mb-6 transition-colors duration-300">
               <h2 className="text-lg font-semibold mb-4 border-b dark:border-white/10 pb-2 text-gray-800 dark:text-white">
-                Select {activeTab === 'mattress' ? 'Mattress' : activeTab === 'topper' ? 'Topper' : 'Protector'} Options
+                Select {getTabTitle()} Options
               </h2>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Model Selection */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    {activeTab === 'mattress' ? 'Mattress Type / Model' : activeTab === 'topper' ? 'Topper Type' : 'Protector Type'}
+                    {getTabTitle()} Model
                   </label>
                   <input
                     type="text"
-                    placeholder={
-                      activeTab === 'mattress' ? 'Search mattress model...' : 
-                      activeTab === 'topper' ? 'Search topper...' : 'Search protector...'
-                    }
+                    placeholder={`Search ${getTabTitle().toLowerCase()} model...`}
                     className="w-full bg-white dark:bg-[#111330] border-gray-300 dark:border-white/10 text-gray-900 dark:text-white rounded-md shadow-sm p-2 border focus:ring-2 focus:ring-[#78ba44] focus:border-transparent outline-none transition-colors mb-2"
                     value={modelSearch}
                     onChange={(e) => setModelSearch(e.target.value)}
@@ -237,9 +360,7 @@ const PriceFinder = () => {
                       setExtraDiscounts([]); // Reset extra discount
                     }}
                   >
-                    <option value="">
-                      -- Select a {activeTab === 'mattress' ? 'Model' : activeTab === 'topper' ? 'Topper' : 'Protector'} --
-                    </option>
+                    <option value="">-- Select a Model --</option>
                     {filteredModels.map((model) => (
                       <option key={model.id} value={model.id}>
                         {model.name} {model.category ? `(${model.category})` : ''}
