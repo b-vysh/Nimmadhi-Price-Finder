@@ -12,14 +12,24 @@ const Login = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const envUsername = import.meta.env.VITE_APP_USERNAME || '';
-    const envPassword = import.meta.env.VITE_APP_PASSWORD || '';
+    const u = username.trim().toLowerCase();
+    const p = password.trim();
 
-    if (
-      username.trim().toLowerCase() === envUsername.trim().toLowerCase() && 
-      password.trim() === envPassword.trim()
-    ) {
+    // User 1: Nimmadhi (Scheme / Discount rates)
+    const user1Name = (import.meta.env.VITE_APP_USERNAME || 'Nimmadhi').trim().toLowerCase();
+    const user1Pass = (import.meta.env.VITE_APP_PASSWORD || 'Nimmadhi2026').trim();
+
+    // User 2: Factory (Actual Showroom rates)
+    const user2Name = (import.meta.env.VITE_APP_FACTORY_USERNAME || 'Factory').trim().toLowerCase();
+    const user2Pass = (import.meta.env.VITE_APP_FACTORY_PASSWORD || 'Nimmadhi').trim();
+
+    if (u === user1Name && p === user1Pass) {
       localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('userRole', 'scheme');
+      navigate('/');
+    } else if (u === user2Name && p === user2Pass) {
+      localStorage.setItem('isAuthenticated', 'true');
+      localStorage.setItem('userRole', 'factory');
       navigate('/');
     } else {
       setError('Invalid username or password');

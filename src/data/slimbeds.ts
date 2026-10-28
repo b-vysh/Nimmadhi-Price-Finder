@@ -1,6 +1,6 @@
 import type { MattressModel } from './mattresses';
 
-export const SLIMBED_DATA: MattressModel[] = [
+export const getSlimbedData = (role: 'scheme' | 'factory'): MattressModel[] => [
   {
     id: "foam-slimbed",
     name: "FOAM SLIMBED",
@@ -8,19 +8,19 @@ export const SLIMBED_DATA: MattressModel[] = [
     sourcePriceList: "FOAM SLIMBED PRICE LIST",
     sizes: [
       {
-        sizeId: "6X3",
+        sizeId: "6X3", // 72X36
         thicknessPrices: [
-          { thicknessInches: 1, price: 1000 },
-          { thicknessInches: 2, price: 1800 },
-          { thicknessInches: 3, price: 2300 }
+          { thicknessInches: 1, price: role === 'factory' ? 1350 : 1150 },
+          { thicknessInches: 2, price: role === 'factory' ? 2200 : 2000 },
+          { thicknessInches: 3, price: role === 'factory' ? 2700 : 2500 }
         ]
       },
       {
-        sizeId: "6X4",
+        sizeId: "6X4", // 72X48
         thicknessPrices: [
-          { thicknessInches: 1, price: 1200 },
-          { thicknessInches: 2, price: 2000 },
-          { thicknessInches: 3, price: 2800 }
+          { thicknessInches: 1, price: role === 'factory' ? 1700 : 1500 },
+          { thicknessInches: 2, price: role === 'factory' ? 2700 : 2500 },
+          { thicknessInches: 3, price: role === 'factory' ? 3200 : 3000 }
         ]
       }
     ]
@@ -32,15 +32,15 @@ export const SLIMBED_DATA: MattressModel[] = [
     sourcePriceList: "FOLDING BED PRICE LIST",
     sizes: [
       {
-        sizeId: "6X3",
+        sizeId: "6X3", // 72X36
         thicknessPrices: [
-          { thicknessInches: 3, price: 3000 }
+          { thicknessInches: 3, price: role === 'factory' ? 3500 : 3000 }
         ]
       },
       {
-        sizeId: "6X4",
+        sizeId: "6X4", // 72X48
         thicknessPrices: [
-          { thicknessInches: 3, price: 3750 }
+          { thicknessInches: 3, price: role === 'factory' ? 3950 : 3750 }
         ]
       }
     ]

@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MATTRESS_DATA, STANDARD_SIZES } from '../data/mattresses';
 import { TOPPER_DATA } from '../data/toppers';
-import { SLIMBED_DATA } from '../data/slimbeds';
-import { PROTECTOR_DATA } from '../data/protectors';
+import { getSlimbedData } from '../data/slimbeds';
+import { getProtectorData } from '../data/protectors';
 import { PILLOW_DATA } from '../data/pillows';
 import { BEDSPREAD_DATA } from '../data/bedspreads';
 import { COMBO_DATA } from '../data/combos';
@@ -26,12 +26,15 @@ const CATEGORIES: CategoryOption[] = [
   { id: 'slimbed', label: 'Slim & Folding Beds', icon: '🛌', subtitle: 'Foam Slimbeds & Folding Beds' },
   { id: 'protector', label: 'Waterproof Protectors', icon: '🛡️', subtitle: '12" PRO Fitted Protectors' },
   { id: 'pillow', label: 'Pillows', icon: '🪶', subtitle: 'Micro, Foam, Latex & Memory Pillows' },
-  { id: 'bedspread', label: 'Bed Spreads & Comforter', icon: '✨', subtitle: 'Bed Spreads, 7D Prints & Comforters' },
+  { id: 'bedspread', label: 'Bed Spreads & Comforter', icon: '✨', subtitle: 'Bed Spreads, 3D Prints & Comforters' },
   { id: 'combo', label: 'Combo Offers', icon: '🎁', subtitle: '8 Special Value Combos (₹399 - ₹1,250)' },
 ];
 
 const PriceFinder = () => {
   const navigate = useNavigate();
+  const role = (localStorage.getItem('userRole') as 'scheme' | 'factory') || 'scheme';
+  const isFactory = role === 'factory';
+
   const [activeTab, setActiveTab] = useState<TabType>('mattress');
   const [selectedModel, setSelectedModel] = useState('');
   const [selectedSize, setSelectedSize] = useState('');
@@ -57,6 +60,7 @@ const PriceFinder = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userRole');
     navigate('/login');
   };
 
@@ -65,8 +69,8 @@ const PriceFinder = () => {
   const currentDataset = 
     activeTab === 'mattress' ? MATTRESS_DATA : 
     activeTab === 'topper' ? TOPPER_DATA : 
-    activeTab === 'slimbed' ? SLIMBED_DATA :
-    activeTab === 'protector' ? PROTECTOR_DATA : [];
+    activeTab === 'slimbed' ? getSlimbedData(role) :
+    activeTab === 'protector' ? getProtectorData(role) : [];
 
   const currentModel = currentDataset.find((m) => m.id === selectedModel);
   const currentSize = currentModel?.sizes.find((s) => s.sizeId === selectedSize);
@@ -150,9 +154,20 @@ const PriceFinder = () => {
             <Menu size={22} className="text-[#78ba44]" />
             <span className="font-bold text-sm tracking-wide hidden sm:inline">Menu</span>
           </button>
-          <h1 className="text-base sm:text-xl font-bold dark:text-[#78ba44] truncate">
-            Nimmadhi Price Finder
-          </h1>
+          <div>
+            <div className="flex items-center gap-2">
+              <h1 className="text-base sm:text-xl font-bold dark:text-[#78ba44] truncate">
+                Nimmadhi Price Finder
+              </h1>
+              <span className={`text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full border shrink-0 ${
+                isFactory
+                  ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-700/50'
+                  : 'bg-green-100 text-green-800 dark:bg-[#78ba44]/20 dark:text-[#78ba44] border-green-300 dark:border-[#78ba44]/30'
+              }`}>
+                {isFactory ? '🏭 Factory Rates' : '🏷️ Scheme Rates'}
+              </span>
+            </div>
+          </div>
         </div>
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <button
@@ -183,7 +198,9 @@ const PriceFinder = () => {
               <div className="p-4 border-b dark:border-white/10 flex items-center justify-between">
                 <div>
                   <h2 className="text-base font-bold text-gray-900 dark:text-white">Price Categories</h2>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">Select product type to view prices</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">
+                    Active: {isFactory ? 'Factory Rates (ACT SR)' : 'Scheme Rates (DIS)'}
+                  </p>
                 </div>
                 <button
                   onClick={() => setIsDrawerOpen(false)}
@@ -391,9 +408,14 @@ const PriceFinder = () => {
         {activeTab === 'pillow' && (
           <div className="bg-white dark:bg-[#181a43]/40 dark:backdrop-blur-xl dark:border dark:border-[#78ba44]/20 rounded-xl shadow-xl p-4 sm:p-6 mb-6 transition-colors duration-300">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b dark:border-white/10 pb-4 mb-4">
-              <h2 className="text-base sm:text-lg font-bold text-gray-800 dark:text-white">
-                Pillows Price List
-              </h2>
+              <div>
+                <h2 className="text-base sm:text-lg font-bold text-gray-800 dark:text-white">
+                  Pillows Price List
+                </h2>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  Pricing Tier: {isFactory ? 'Actual Showroom Rates (ACT SR)' : 'Discount Rates (DIS)'}
+                </span>
+              </div>
               <input
                 type="text"
                 placeholder="Search pillows..."
@@ -416,16 +438,19 @@ const PriceFinder = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white/10">
-                  {filteredPillows.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                      <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm sm:text-base font-medium text-gray-900 dark:text-gray-200">
-                        {item.name}
-                      </td>
-                      <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm sm:text-base font-bold text-right text-blue-900 dark:text-white">
-                        ₹{item.price.toLocaleString('en-IN')}
-                      </td>
-                    </tr>
-                  ))}
+                  {filteredPillows.map((item) => {
+                    const price = isFactory ? item.actPrice : item.disPrice;
+                    return (
+                      <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm sm:text-base font-medium text-gray-900 dark:text-gray-200">
+                          {item.name}
+                        </td>
+                        <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm sm:text-base font-bold text-right text-blue-900 dark:text-white">
+                          ₹{price.toLocaleString('en-IN')}
+                        </td>
+                      </tr>
+                    );
+                  })}
                   {filteredPillows.length === 0 && (
                     <tr>
                       <td colSpan={2} className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
@@ -443,9 +468,14 @@ const PriceFinder = () => {
         {activeTab === 'bedspread' && (
           <div className="bg-white dark:bg-[#181a43]/40 dark:backdrop-blur-xl dark:border dark:border-[#78ba44]/20 rounded-xl shadow-xl p-4 sm:p-6 mb-6 transition-colors duration-300">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b dark:border-white/10 pb-4 mb-4">
-              <h2 className="text-base sm:text-lg font-bold text-gray-800 dark:text-white">
-                Bed Spreads & Comforter Price List
-              </h2>
+              <div>
+                <h2 className="text-base sm:text-lg font-bold text-gray-800 dark:text-white">
+                  Bed Spreads & Comforter Price List
+                </h2>
+                <span className="text-xs text-gray-500 dark:text-gray-400">
+                  Pricing Tier: {isFactory ? 'Actual Showroom Rates (ACT SR)' : 'Discount Rates (DIS)'}
+                </span>
+              </div>
               <input
                 type="text"
                 placeholder="Search bed spread, comforter..."
@@ -477,33 +507,36 @@ const PriceFinder = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white dark:bg-transparent divide-y divide-gray-200 dark:divide-white/10">
-                  {filteredBedSpreads.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
-                      <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-200">
-                        {item.name}
-                      </td>
-                      <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-xs font-semibold">
-                        <span className={`px-2 py-0.5 rounded-full ${
-                          item.category === '7D Print'
-                            ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
-                            : item.category === 'Comforter'
-                            ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
-                            : 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-[#78ba44]'
-                        }`}>
-                          {item.category}
-                        </span>
-                      </td>
-                      <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 font-mono">
-                        {item.size}
-                      </td>
-                      <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
-                        {item.pillowCovers}
-                      </td>
-                      <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm sm:text-base font-bold text-right text-blue-900 dark:text-white">
-                        ₹{item.price.toLocaleString('en-IN')}
-                      </td>
-                    </tr>
-                  ))}
+                  {filteredBedSpreads.map((item) => {
+                    const price = isFactory ? item.actPrice : item.disPrice;
+                    return (
+                      <tr key={item.id} className="hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                        <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-200">
+                          {item.name}
+                        </td>
+                        <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-xs font-semibold">
+                          <span className={`px-2 py-0.5 rounded-full ${
+                            item.category === '3D Print'
+                              ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300'
+                              : item.category === 'Comforter'
+                              ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
+                              : 'bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-[#78ba44]'
+                          }`}>
+                            {item.category}
+                          </span>
+                        </td>
+                        <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 font-mono">
+                          {item.size}
+                        </td>
+                        <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">
+                          {item.pillowCovers}
+                        </td>
+                        <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm sm:text-base font-bold text-right text-blue-900 dark:text-white">
+                          ₹{price.toLocaleString('en-IN')}
+                        </td>
+                      </tr>
+                    );
+                  })}
                   {filteredBedSpreads.length === 0 && (
                     <tr>
                       <td colSpan={5} className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
