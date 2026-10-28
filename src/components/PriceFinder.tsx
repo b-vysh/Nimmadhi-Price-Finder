@@ -6,11 +6,12 @@ import { SLIMBED_DATA } from '../data/slimbeds';
 import { PROTECTOR_DATA } from '../data/protectors';
 import { PILLOW_DATA } from '../data/pillows';
 import { BEDSPREAD_DATA } from '../data/bedspreads';
+import { COMBO_DATA } from '../data/combos';
 import { Moon, Sun, Menu, X, ChevronDown, Check } from 'lucide-react';
 
 const DISCOUNTS = [0, 10, 20, 30, 40, 50];
 type UnitType = 'feet' | 'inches' | 'metric';
-type TabType = 'mattress' | 'topper' | 'slimbed' | 'protector' | 'pillow' | 'bedspread';
+type TabType = 'mattress' | 'topper' | 'slimbed' | 'protector' | 'pillow' | 'bedspread' | 'combo';
 
 interface CategoryOption {
   id: TabType;
@@ -26,6 +27,7 @@ const CATEGORIES: CategoryOption[] = [
   { id: 'protector', label: 'Waterproof Protectors', icon: '🛡️', subtitle: '12" PRO Fitted Protectors' },
   { id: 'pillow', label: 'Pillows', icon: '🪶', subtitle: 'Micro, Foam, Latex & Memory Pillows' },
   { id: 'bedspread', label: 'Bed Spreads & Comforter', icon: '✨', subtitle: 'Bed Spreads, 7D Prints & Comforters' },
+  { id: 'combo', label: 'Combo Offers', icon: '🎁', subtitle: '8 Special Value Combos (₹399 - ₹1,250)' },
 ];
 
 const PriceFinder = () => {
@@ -97,6 +99,12 @@ const PriceFinder = () => {
 
   const filteredBedSpreads = BEDSPREAD_DATA.filter((item) =>
     `${item.name} ${item.category} ${item.size} ${item.pillowCovers}`
+      .toLowerCase()
+      .includes(modelSearch.toLowerCase())
+  );
+
+  const filteredCombos = COMBO_DATA.filter((combo) =>
+    `${combo.name} ${combo.breakdown} ${combo.items.join(' ')} ${combo.price}`
       .toLowerCase()
       .includes(modelSearch.toLowerCase())
   );
@@ -294,6 +302,91 @@ const PriceFinder = () => {
           )}
         </div>
 
+        {/* COMBO OFFERS VIEW */}
+        {activeTab === 'combo' && (
+          <div className="bg-white dark:bg-[#181a43]/40 dark:backdrop-blur-xl dark:border dark:border-[#78ba44]/20 rounded-xl shadow-xl p-4 sm:p-6 mb-6 transition-colors duration-300">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b dark:border-white/10 pb-4 mb-5">
+              <div>
+                <h2 className="text-base sm:text-lg font-bold text-gray-800 dark:text-white">
+                  Combo Offers & Value Packs
+                </h2>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  8 special discounted combo packages
+                </p>
+              </div>
+              <input
+                type="text"
+                placeholder="Search combo or item..."
+                className="w-full sm:w-64 bg-white dark:bg-[#111330] border border-gray-300 dark:border-white/10 text-gray-900 dark:text-white rounded-lg shadow-sm p-2.5 text-base sm:text-sm focus:ring-2 focus:ring-[#78ba44] focus:border-transparent outline-none transition-colors"
+                value={modelSearch}
+                onChange={(e) => setModelSearch(e.target.value)}
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {filteredCombos.map((combo) => {
+                const savings = combo.regularPrice - combo.price;
+                return (
+                  <div
+                    key={combo.id}
+                    className="p-4 sm:p-5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50/50 dark:bg-white/[0.03] hover:border-[#78ba44]/50 dark:hover:border-[#78ba44]/50 transition-all shadow-sm hover:shadow-md flex flex-col justify-between gap-3"
+                  >
+                    <div>
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <span className="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-md bg-blue-100 dark:bg-[#78ba44]/20 text-blue-800 dark:text-[#78ba44]">
+                          {combo.name}
+                        </span>
+                        {savings > 0 && (
+                          <span className="text-xs font-bold text-green-700 dark:text-[#78ba44] bg-green-100 dark:bg-green-950/60 px-2 py-0.5 rounded-full shrink-0">
+                            Save ₹{savings}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="space-y-1.5 my-3">
+                        <div className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                          Package Contents:
+                        </div>
+                        <ul className="space-y-1">
+                          {combo.items.map((item, idx) => (
+                            <li key={idx} className="text-sm font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                              <span className="text-[#78ba44] text-xs">✔</span>
+                              {item}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="pt-3 border-t border-gray-200 dark:border-white/10 flex items-end justify-between">
+                      <div>
+                        <div className="text-xs text-gray-400 dark:text-gray-500 line-through">
+                          Regular: ₹{combo.regularPrice}
+                        </div>
+                        <div className="text-[11px] text-gray-500 dark:text-gray-400">
+                          {combo.breakdown}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-xs text-gray-500 dark:text-gray-400 block font-medium">Combo Rate</span>
+                        <span className="text-xl sm:text-2xl font-black text-blue-900 dark:text-[#78ba44]">
+                          ₹{combo.price.toLocaleString('en-IN')}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {filteredCombos.length === 0 && (
+              <div className="text-center py-10 text-sm text-gray-500 dark:text-gray-400">
+                No combo offers found matching "{modelSearch}"
+              </div>
+            )}
+          </div>
+        )}
+
         {/* PILLOWS VIEW */}
         {activeTab === 'pillow' && (
           <div className="bg-white dark:bg-[#181a43]/40 dark:backdrop-blur-xl dark:border dark:border-[#78ba44]/20 rounded-xl shadow-xl p-4 sm:p-6 mb-6 transition-colors duration-300">
@@ -425,7 +518,7 @@ const PriceFinder = () => {
         )}
 
         {/* MATTRESS, TOPPER, SLIMBED & PROTECTOR VIEW */}
-        {activeTab !== 'pillow' && activeTab !== 'bedspread' && (
+        {activeTab !== 'pillow' && activeTab !== 'bedspread' && activeTab !== 'combo' && (
           <>
             <div className="bg-white dark:bg-[#181a43]/40 dark:backdrop-blur-xl dark:border dark:border-[#78ba44]/20 rounded-xl shadow-xl p-4 sm:p-6 lg:p-8 mb-6 transition-colors duration-300">
               <h2 className="text-base sm:text-lg font-bold mb-4 border-b dark:border-white/10 pb-2 text-gray-800 dark:text-white">
@@ -607,7 +700,7 @@ const PriceFinder = () => {
                                   ₹{discountedPrice.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                                 </td>
                                 {extraDiscounts.length > 0 && (
-                                  <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm sm:text-base font-bold text-green-600 dark:text-[#78ba44]">
+                                  <td className="px-3 sm:px-6 py-3.5 whitespace-nowrap text-sm font-bold text-green-600 dark:text-[#78ba44]">
                                     ₹{finalExtraPrice.toLocaleString('en-IN', { maximumFractionDigits: 0 })}
                                   </td>
                                 )}
