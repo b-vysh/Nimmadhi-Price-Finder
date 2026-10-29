@@ -159,12 +159,12 @@ const PriceFinder = () => {
               <h1 className="text-base sm:text-xl font-bold dark:text-[#78ba44] truncate">
                 Nimmadhi Price Finder
               </h1>
-              <span className={`text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-full border shrink-0 ${
+              <span className={`text-[10px] sm:text-xs font-bold px-2.5 py-0.5 rounded-full border shrink-0 ${
                 isFactory
                   ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300 border-amber-300 dark:border-amber-700/50'
                   : 'bg-green-100 text-green-800 dark:bg-[#78ba44]/20 dark:text-[#78ba44] border-green-300 dark:border-[#78ba44]/30'
               }`}>
-                {isFactory ? '🏭 Factory Rates' : '🏷️ Scheme Rates'}
+                {isFactory ? '🏭 Factory Rates' : '🏷️ SSN'}
               </span>
             </div>
           </div>
@@ -199,7 +199,7 @@ const PriceFinder = () => {
                 <div>
                   <h2 className="text-base font-bold text-gray-900 dark:text-white">Price Categories</h2>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    Active: {isFactory ? 'Factory Rates (ACT SR)' : 'Scheme Rates (DIS)'}
+                    Active: {isFactory ? 'Factory Rates (ACT SR)' : 'SSN'}
                   </p>
                 </div>
                 <button
@@ -413,7 +413,7 @@ const PriceFinder = () => {
                   Pillows Price List
                 </h2>
                 <span className="text-xs text-gray-500 dark:text-gray-400">
-                  Pricing Tier: {isFactory ? 'Actual Showroom Rates (ACT SR)' : 'Discount Rates (DIS)'}
+                  Pricing Tier: {isFactory ? 'Factory Rates (ACT SR)' : 'SSN'}
                 </span>
               </div>
               <input
@@ -473,7 +473,7 @@ const PriceFinder = () => {
                   Bed Spreads & Comforter Price List
                 </h2>
                 <span className="text-xs text-gray-500 dark:text-gray-400">
-                  Pricing Tier: {isFactory ? 'Actual Showroom Rates (ACT SR)' : 'Discount Rates (DIS)'}
+                  Pricing Tier: {isFactory ? 'Factory Rates (ACT SR)' : 'SSN'}
                 </span>
               </div>
               <input
