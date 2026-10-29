@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MATTRESS_DATA, STANDARD_SIZES } from '../data/mattresses';
-import { TOPPER_DATA } from '../data/toppers';
+import { getTopperData } from '../data/toppers';
 import { getSlimbedData } from '../data/slimbeds';
 import { getProtectorData } from '../data/protectors';
 import { PILLOW_DATA } from '../data/pillows';
@@ -27,7 +27,7 @@ const CATEGORIES: CategoryOption[] = [
   { id: 'protector', label: 'Waterproof Protectors', icon: '🛡️', subtitle: '12" PRO Fitted Protectors' },
   { id: 'pillow', label: 'Pillows', icon: '🪶', subtitle: 'Micro, Foam, Latex & Memory Pillows' },
   { id: 'bedspread', label: 'Bed Spreads & Comforter', icon: '✨', subtitle: 'Bed Spreads, 3D Prints & Comforters' },
-  { id: 'combo', label: 'Combo Offers', icon: '🎁', subtitle: '8 Special Value Combos (₹399 - ₹1,250)' },
+  { id: 'combo', label: 'Combo Offers', icon: '🎁', subtitle: '8 Special Value Combos (₹399 - ₹1,499)' },
 ];
 
 const PriceFinder = () => {
@@ -68,7 +68,7 @@ const PriceFinder = () => {
 
   const currentDataset = 
     activeTab === 'mattress' ? MATTRESS_DATA : 
-    activeTab === 'topper' ? TOPPER_DATA : 
+    activeTab === 'topper' ? getTopperData(role) : 
     activeTab === 'slimbed' ? getSlimbedData(role) :
     activeTab === 'protector' ? getProtectorData(role) : [];
 

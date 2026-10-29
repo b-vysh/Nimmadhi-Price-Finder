@@ -10,7 +10,7 @@ export interface ComboOffer {
 export const COMBO_DATA: ComboOffer[] = [
   {
     id: "combo-399",
-    name: "RS. 399/- COMBO",
+    name: "RS. 399/- COMBO (SUPER PILLOWS & COVER)",
     price: 399,
     regularPrice: 500,
     breakdown: "300/- Super Pillows + 200/- Pillow Cover = 500/-",
@@ -49,12 +49,12 @@ export const COMBO_DATA: ComboOffer[] = [
     items: ["Micro Pillow (2 Nos)", "Fine Pillow (2 Nos)"]
   },
   {
-    id: "combo-1000",
-    name: "RS. 1000/- COMBO (3D PRINT RAINBOW)",
-    price: 1000,
-    regularPrice: 1200,
-    breakdown: "600/- x 2 Bedsheets = 1200/-",
-    items: ["3D Print 60X90 Rainbow (1+2) - 2 Nos"]
+    id: "combo-1199",
+    name: "RS. 1199/- COMBO (3D PRINT BED SHEET)",
+    price: 1199,
+    regularPrice: 1400,
+    breakdown: "700x2 = 1400/- (3D Print Bed Sheets)",
+    items: ["3D Print Rainbow (1+2) - 2 Nos"]
   },
   {
     id: "combo-1200",
@@ -65,11 +65,11 @@ export const COMBO_DATA: ComboOffer[] = [
     items: ["Micro Pillow (4 Nos)"]
   },
   {
-    id: "combo-1250",
-    name: "RS. 1250/- COMBO (PROTECTOR & PILLOWS)",
-    price: 1250,
+    id: "combo-1499",
+    name: "RS. 1499/- COMBO (PROTECTOR & PILLOWS)",
+    price: 1499,
     regularPrice: 1700,
-    breakdown: "1000/- Protector + 700/- Micro Pillows = 1700/-",
+    breakdown: "350x2 = 700/- Micro Pillows + 1000/- 75X60 Protector = 1700/-",
     items: ["75X60X12 PRO Waterproof Protector", "Micro Pillow (2 Nos)"]
   }
 ];
