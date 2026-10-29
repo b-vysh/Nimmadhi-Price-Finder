@@ -20,7 +20,7 @@ export const BEDSPREAD_DATA: BedSpreadItem[] = [
   // 3D/7D Print Bed Spread with Pillow Cover
   { id: "3d-60x90-rainbow-1-1", category: "3D Print", name: "RAINBOW (1+1)", size: "60X90", pillowCovers: "1 Cover", disPrice: 700, actPrice: 800 },
   { id: "3d-70x90-rainbow-1-2", category: "3D Print", name: "RAINBOW (1+2)", size: "70X90", pillowCovers: "2 Covers", disPrice: 800, actPrice: 900 },
-  { id: "3d-90x100-rainbow-1-2", category: "3D Print", name: "RAINBOW (1+2)", size: "90X100", pillowCovers: "2 Covers", disPrice: 900, actPrice: 1100 },
+  { id: "3d-90x100-rainbow-1-2", category: "3D Print", name: "RAINBOW (1+2)", size: "90X100", pillowCovers: "2 Covers", disPrice: 1000, actPrice: 1100 },
 
   // Comforter
   { id: "comforter-90x100", category: "Comforter", name: "COMFORTER", size: "90X100", pillowCovers: "-", disPrice: 1300, actPrice: 1500 }
